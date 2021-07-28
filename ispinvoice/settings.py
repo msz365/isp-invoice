@@ -149,5 +149,3 @@ EMAIL_USE_SSL=True
 EMAIL_USE_TLS=False
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 django_heroku.settings(locals())
-if os.path.exists('env.py'):
-        import env
