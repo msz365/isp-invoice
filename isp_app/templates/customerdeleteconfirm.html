@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% block title %}Confirm Delete{% endblock title %}
+{% block content%}
+<div class="container">
+  <h1>Delete Customer</h1>
+  <h3>Are you sure you want to delete {{customer.customer_name}} ?</h3>
+  <form method="post">
+    {%csrf_token%}
+    <a href="{% url 'isp_app:customerlist' %}"><input type="submit" class="btn btn-default" value="Delete"></a>
+  </form>
+
+</div>
+
+
+{% endblock %}

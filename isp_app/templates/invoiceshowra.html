@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+{% load bootstrap3 %}
+{% load humanize %}
+{% load static%}
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" charset="utf-8"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" charset="utf-8"></script>
+    <title>Invoice {{invoice.invoice_number}}</title>
+    <style media="screen">
+      .mytitle{
+        text-align:center;
+      }
+      .myheading{
+        background-color:#8FBAF5;
+      }
+      .myright{
+        text-align:right;
+      }
+      .myheading2{
+        background-color:#8FBAF5;
+        text-align:center;
+      }
+      .abc{
+        height:300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" padding-top="20px">
+      <div class="logo">
+        <img src="{%static 'img/ra.png'%}" width="300px" height="150px">
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-12 mytitle" ><h1>Quotation</h1></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-12 myheading"><h3>Customer Details</h3></div>
+      </div>
+      <div class="row justify-content-between">
+        <div class="col-md-2" ><h5>Customer Name: </h5></div>
+        <div class="col-md-6" ><h5>{{invoice.customer.customer_name}}</h5></div>
+        <div class="col-md-2 myright" ><h5>Invoice Number: </h5></div>
+        <div class="col-md-2 myright" ><h5>{{invoice.increment_invoice_numberra}}</h5></div>
+      </div>
+      <div class="row justify-content-between">
+        <div class="col-md-2" ><h5>Company Name: </h5></div>
+        <div class="col-md-6" ><h5>{{invoice.customer.taxpayer_name}}</h5></div>
+        <div class="col-md-2 myright" ><h5>Invoice Date: </h5></div>
+        <div class="col-md-2 myright" ><h5>{{invoice.date_created}}</h5></div>
+
+      </div>
+      <div class="row justify-content-between">
+        <div class="col-md-2" ><h5>Contact Number: </h5></div>
+        <div class="col-md-6" ><h5>{{invoice.customer.contact_number}}</h5></div>
+        <div class="col-md-2 myright" ><h5>Invoice Month: </h5></div>
+        <div class="col-md-2 myright" ><h5>{{invoice.invoice_month}}</h5></div>
+      </div>
+      <div class="row justify-content-between">
+        <div class="col-md-2" ><h5>Customer ID: </h5></div>
+        <div class="col-md-6" ><h5>{{invoice.customer.customer_id}}</h5></div>
+        <div class="col-md-2 myright" ><h5>Due Date: </h5></div>
+        <div class="col-md-2 myright" ><h5>{{invoice.invoice_due_date}}</h5></div>
+      </div>
+      <div class="row justify-content">
+        <div class="col-md-2" ><h5>Address: </h5></div>
+        <div class="col-md-6" ><h5>{{invoice.customer.address}}</h5></div>
+      </div>
+      <div class="row justify-content">
+        <div class="col-md-2" ><h5>City: </h5></div>
+        <div class="col-md-6" ><h5>{{invoice.customer.city}}</h5></div>
+      </div>
+      <div class="row justify-content">
+        <div class="col-md-2" ><h5>E-Mail Address: </h5></div>
+        <div class="col-md-6" ><h5>{{invoice.customer.email}}</h5></div>
+      </div>
+      <div class="row justify-content">
+        <div class="col-md-2" ><h5>Entity Type: </h5></div>
+        <div class="col-md-6" ><h5>{{invoice.customer.taxpayer_status}}</h5></div>
+      </div>
+      <div class="row justify-content">
+        <div class="col-md-2" ><h5>NTN/CNIC: </h5></div>
+        <div class="col-md-6" ><h5>{{invoice.customer.ntn_cnic}}</h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-1 myheading2"><h3>SNo.</h3></div>
+        <div class="col-md-3 myheading2"><h3>Service</h3></div>
+        <div class="col-md-2 myheading2"><h3>Qty/Mbps</h3></div>
+        <div class="col-md-3 myheading2"><h3>Taxes Applied</h3></div>
+        <div class="col-md-3 myheading2"><h3>Amount</h3></div>
+      </div>
+      <div class="abc">
+        {% for service in invoice.customer.service_subscribed.all %}
+            <div class="row justify-content-center">
+              <div class="col-md-1 mytitle"><h5>{{forloop.counter}}</h5></div>
+              <div class="col-md-3 mytitle"><h5>{{service.service_name}}</h5></div>
+              <div class="col-md-2 mytitle"><h5>{{service.service_qunatity}}</h5></div>
+              <div class="col-md-3 mytitle"><h5>{%for tax in service.get_tax%}{{tax.tax_name}} {%endfor%}</h5></div>
+              <div class="col-md-3 mytitle"><h5>{{service.cost_pretax|intcomma}}</h5></div>
+            </div>
+        {%endfor%}
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-md-1 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-2 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-1 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-2 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-1 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-2 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-1 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-2 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-1 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-2 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-1 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-2 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-1 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-2 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-6 mytitle"><h5></h5></div>
+        <div class="col-md-3 myheading2"><h3>Summary</h3></div>
+        <div class="col-md-3 myheading2"><h3>Amount</h3></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-6 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5>GST(19.5%)</h5></div>
+        <div class="col-md-3 mytitle"><h5>{{invoice.customer.get_gst|intcomma}}</h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-6 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5>WHT(12.5%)</h5></div>
+        <div class="col-md-3 mytitle"><h5>{{invoice.customer.get_wht|intcomma}}</h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-6 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle bg-success"><h5>Amount Within Due Date</h5></div>
+        <div class="col-md-3 mytitle bg-success"><h5>{{invoice.customer.total_service_cost|intcomma}}</h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-6 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle bg-warning"><h5>Amount After Due Date</h5></div>
+        <div class="col-md-3 mytitle bg-warning"><h5>{{invoice.customer.amount_after_due_date|intcomma}}</h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-6 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-6 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+        <div class="col-md-3 mytitle"><h5></h5></div>
+      </div>
+      <div class="row justify-content-center bg-success">
+        <div class="col-md-12 mytitle"><h5>Amount in words: {{invoice.customer.get_words}}</h5></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-12"><h6>1. Kindly ensure payment within due date to avoid automatic disconnection</h6></div>
+        <div class="col-md-12"><h6>2. Payment may be made at SKIF Offices or via cash or cheque in favor of SKIF Enterprises Pvt. Ltd.</h6></div>
+        <div class="col-md-12"><h6>3. For any queries regarding billing please contact 0300 8117433 or billing@skifgroup.com</h6></div>
+        <div class="col-md-12"><h6>4. SKIF NTN: 3747747-1</h6></div>
+        <div class="col-md-12"><h6>5. This is a computer generated Invoice and does not require any signature.</h6></div>
+        <div class="col-md-12"><h6>6. For Complaints or support, please call or Whatsapp 0300 8117467 or 03008117431</h6></div>
+      </div>
+    </div>
+
+  </body>
+</html>

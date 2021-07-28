@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+{% load bootstrap3 %}
+{% load humanize %}
+{% load static%}
+{% load mathfilters %}
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>OTC Invoice {{invoiceotc.invoice_number}}</title>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+    <style type="text/css">
+
+      .middlerow{
+        width:400px;
+      }
+      .cdetl{
+        background-color:#f32c9d;
+      }
+      .middlerow2{
+        width:100px;
+      }
+      .sno{
+        width:50px;
+      }
+      .invdetl{
+        text-align: center;
+      }
+      .mytitle{
+        text-align:center;
+      }
+      .center{
+        text-align: center;
+      }
+      .myright{
+        text-align:right;
+      }
+      .myheading2{
+        background-color:#f32c9d;
+        text-align:center;
+
+      }
+      .abc{
+        height:300px;
+      }
+      .right{
+        text-align: right;
+      }
+      th, td {
+        padding: 3px;
+        border: 0.15px solid grey;
+        vertical-align: bottom;
+
+      }
+      table{
+        padding-top: 3px;
+
+      }
+      h1{
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" padding-top="20px">
+      <div class="logo">
+        <img src="D:\python\isp\ispinvoice\static\img\ra.png" width="250px" height="125px">
+      </div>
+        <div class="col-md-12 mytitle" ><h1>Invoice</h1></div>
+      <table>
+        <tr class="cdetl">
+          <th colspan="4">Customer Details</th>
+        </tr>
+      </table>
+      <br>
+      <table>
+        <tr>
+          <td class="middlerow2">Customer Name: </td>
+          <td>{{invoiceotc.customer.customer_name}}</td>
+          <td class="right middlerow2">Quotation Number: </td>
+          <td class="invdetl">{{invoiceotc.invoice_number}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Company Name: </td>
+          <td>{{invoiceotc.customer.taxpayer_name}}</td>
+          <td class="right middlerow2">Quotation Date: </td>
+          <td class="invdetl">{{invoiceotc.invoice_date|date}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Contact Number: </td>
+          <td>{{invoiceotc.customer.contact_number}}</td>
+          <td class="right middlerow2">Quotation Month: </td>
+          <td class="invdetl">{{invoiceotc.get_month}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Customer ID: </td>
+          <td>{{invoiceotc.customer.customer_id}}</td>
+          <th class="right middlerow2">Due Date: </th>
+          <th class="invdetl">{{invoiceotc.get_duedate|date}}</th>
+        </tr>
+        <tr>
+          <td class="middlerow2">Address: </td>
+          <td class="middlerow">{{invoiceotc.customer.address}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">City: </td>
+          <td>{{invoiceotc.customer.city}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">E-Mail Address: </td>
+          <td>{{invoiceotc.customer.email}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Entity Type: </td>
+          <td>{{invoiceotc.customer.taxpayer_status}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">NTN/CNIC: </td>
+          <td>{{invoiceotc.customer.ntn_cnic}}</td>
+        </tr>
+      </table>
+      <br>
+      <br>
+      <table>
+        <tr class="myheading2">
+          <th class="sno">SNo.</th>
+          <th >Service</th>
+          <th>Qty/Mbps</th>
+          <th>Taxes Applied</th>
+          <th>Amount</th>
+        </tr>
+            <tr>
+            <td class="center">1</td>
+            <td class="center">OTC</td>
+            <td class="center">1</td>
+            <td class="center">0</td>
+            <td class="center">{{invoiceotc.customer.otc|intcomma}}</td>
+            </tr>
+
+      </table>
+    </div>
+    <div class="abc">
+
+    </div>
+    <br>
+    <br>
+    <table>
+      <tr>
+        <td colspan="3"></td>
+        <th class="myheading2">Summary</th>
+        <th class="myheading2">Amount</th>
+      </tr>
+      <tr>
+        <td colspan="3"></td>
+        <th class="center">Total Payable</th>
+        <th class="center">{{invoiceotc.get_invoice_total|intcomma}}</th>
+      </tr>
+    </table>
+      <div class="row justify-content-center bg-success">
+        <div class="col-md-12"><h5>Amount in words: {{invoiceotc.get_words_total}}</h5></div>
+      </div>
+      <p>1. Equipment remains property of SKIF Enteprsies and will be returned by client in running condition for termination of services.
+      <br>2. Failure to return working equipment or handover equipment after termination request processing will result in continued billing till procedure is followed.
+      <br>3. This is a computer generated document and does not require any signature.
+      <br>
+     </p>
+      <div class="row justify-content-center">
+        <div class="col-md-12 right"><h6>Document Prepared by {{invoiceotc.invoice_created_by}}</h6></div>
+      </div>
+    </div>
+
+  </body>
+</html>

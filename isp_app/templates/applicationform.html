@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+{% load bootstrap3 %}
+{% load humanize %}
+{% load static%}
+{% load mathfilters %}
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Application Form {{applicationform.application_number}}</title>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+    <style type="text/css">
+      .terms p{
+        font-size: 9px;
+      }
+      .tab {padding-right:30px;}
+
+      .middlerow{
+        width:630px;
+      }
+      .cdetl{
+        background-color:#8FBAF5;
+      }
+      .middlerow2{
+        width:88px;
+      }
+      .middlerow3{
+        width:120px;
+      }
+      .middlerow4{
+        width:315px;
+      }
+      .sno{
+        width:50px;
+      }
+      .invdetl{
+        text-align: center;
+      }
+      .mytitle{
+        text-align:center;
+      }
+      .center{
+        text-align: center;
+      }
+      .myright{
+        text-align:right;
+      }
+      .myheading2{
+        background-color:#8FBAF5;
+        text-align:center;
+
+      }
+      .abc{
+        height:300px;
+      }
+      .right{
+        text-align: right;
+      }
+      th, td {
+        padding: 3px;
+        border: 0.15px solid grey;
+        vertical-align: bottom;
+
+      }
+      table{
+        padding-top: 3px;
+
+      }
+      h1{
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" padding-top="20px">
+      <div class="logo">
+        <img src="D:\python\isp\ispinvoice\static\img\skif.jpg" width="250px" height="125px">
+      </div>
+        <div class="col-md-12 mytitle" ><h1>APPLICATION FORM FOR INTERNET CONNECTION REGISTRATION</h1>
+          <p style="text-align:right">Form Number: {{applicationform.application_number}}</p>
+          <p style="text-align:right">Apllication Date: {{applicationform.application_date|date}}</p>
+      </div>
+
+      <table style=" width: 100%;">
+        <tr class="cdetl">
+          <th colspan="4">Customer Details</th>
+        </tr>
+      </table>
+      <br>
+      <table style="width:100%;">
+        <tr>
+          <td class="middlerow2">Customer ID: </td>
+          <td>{{applicationform.application_number}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Customer Name: </td>
+          <td>{{applicationform.customer.customer_name}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Company Name: </td>
+          <td>{{applicationform.customer.taxpayer_name}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Contact Number: </td>
+          <td>{{applicationform.customer.contact_number}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Address: </td>
+          <td class="middlerow">{{applicationform.customer.address}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">City: </td>
+          <td>{{applicationform.customer.city}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">E-Mail Address: </td>
+          <td>{{applicationform.customer.email}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Entity Type: </td>
+          <td>{{applicationform.customer.taxpayer_status}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">NTN/CNIC: </td>
+          <td>{{applicationform.customer.ntn_cnic}}</td>
+        </tr>
+      </table>
+      <br>
+      <br>
+      <table style=" width: 100%;">
+        <tr class="cdetl">
+          <th colspan="4">Connection Details</th>
+        </tr>
+      </table>
+      <br>
+      <table>
+        <tr class="myheading2">
+          <th class="sno">SNo.</th>
+          <th >Service</th>
+          <th>Qty/Mbps</th>
+          <th>Taxes Applied</th>
+          <th>Amount</th>
+        </tr>
+        <tr>
+        <td class="center">1</td>
+        <td class="center">OTC</td>
+        <td class="center">1</td>
+        <td class="center">0</td>
+        <td class="center">{{applicationform.customer.otc}}</td>
+        </tr>
+          {% for service in applicationform.customer.service_subscribed.all %}
+            <tr>
+            <td class="center">{{forloop.counter|add:1}}</td>
+            <td class="center">{{service.service_name}}</td>
+            <td class="center">{{service.service_qunatity}}</td>
+            <td class="center">{%for tax in service.get_tax%}{{tax.tax_name}} {%endfor%}</td>
+            <td class="center">{{service.cost_pretax|intcomma}}</td>
+            </tr>
+          {%endfor%}
+      </table>
+      <p><strong>Note: Above mentioned prices are exclusive of all applicable taxes.</strong></p>
+    </div>
+    <div class="abc">
+
+    </div>
+    <br>
+    <br>
+    <table style=" width: 100%;">
+      <tr class="cdetl">
+        <th colspan="4"><strong>For Official Use Only</strong></th>
+      </tr>
+    </table>
+    <br>
+    <table>
+
+      <tr>
+        <td class="middlerow3" style="height:40px;vertical-align:top;">Sale Made By: </td>
+        <td class="middlerow4" style="height:40px;vertical-align:top;">Name: </td>
+        <td class="middlerow4" style="height:40px;vertical-align:top;">Signature</td>
+      </tr>
+      <tr>
+        <td class="middlerow3" style="height:40px;vertical-align:top;">Order Verified By:</td>
+        <td class="middlerow4" style="height:40px;vertical-align:top;">Name: </td>
+        <td class="middlerow4" style="height:40px;vertical-align:top;">Signature</td>
+      </tr>
+      <tr>
+        <td class="middlerow3" style="height:40px;vertical-align:top;">Node Head: </td>
+        <td class="middlerow4" style="height:40px;vertical-align:top;">Name: </td>
+        <td class="middlerow4" style="height:40px;vertical-align:top;">Signature</td>
+      </tr>
+      <tr>
+        <td class="middlerow3" style="height:40px;vertical-align:top;">Incharge ISP</td>
+        <td class="middlerow4" style="height:40px;vertical-align:top;">Name: </td>
+        <td class="middlerow4" style="height:40px;vertical-align:top;">Signature</td>
+      </tr>
+      <tr>
+        <td class="middlerow3" style="height:40px;vertical-align:top;">Accounts Department</td>
+        <td class="middlerow4" style="height:40px;vertical-align:top;">Name: </td>
+        <td class="middlerow4" style="height:40px;vertical-align:top;">Signature</td>
+      </tr>
+    </table>
+
+    <pdf:nextpage />
+    <div class="col-md-12 mytitle" ><h3>CONDITIONS FOR USE OF INTERNET SERVICES PROVIDED BY SKIF Enterprises Pvt. Ltd.</h3></div>
+    <div class="terms">
+      <p>i.	The licensee shall not use internet services for:</p>
+      <p style="margin-left:20px;">Breaking into networks and databases, hacking, transmitting any electronic virus, adware, spyware etc.<br>
+        Sending message that may cause any threat, harassment, annoyance, inconvenience to any person.
+        Any purpose which is contrary to law or conflicting with regulatory policies issued by SKIF Enterprises Pvt. Ltd. from time to time.<br>
+        Violating the terms and conditions as per Pakistan Telecommunication (Re-Organization) Act of 1996 & ordinance.<br>
+      </p>
+      <p>ii.	Any breach or violation of these conditions may lead to disconnection of the facilities without any prior notice or liability/damage whatsoever on part of SKIF Enterprises Pvt. Ltd.</p>
+      <h5>SKIF Enterprises Pvt. Ltd. Rights</h5>
+      <p style="margin-left:20px;text-align: justify;text-justify: inter-word;">SKIF Enterprises Pvt. Ltd reserves the right to manage and control access to the computer system and data stored at the SKIF Enterprises Pvt. Ltd Internet system according to the terms and conditions laid down by SKIF Enterprises Pvt. Ltd. SKIF Enterprises Pvt. Ltd makes no warranty and hereby disclaims all liabilities whatsoever in respect of and/or arising out of the facilities provided to the licensee by SKIF Enterprises Pvt. Ltd or the software not owned  or distributed by SKIF Enterprises Pvt. Ltd.<br>
+        SKIF Enterprises Pvt. Ltd  shall  have  the  right  to  disconnect  the  facilities  after  expiration  of  the  notice  period (one calendar month)  and  SKIF Enterprises Pvt. Ltd  may restore the connection to the licensee on such terms and conditions including but not limited to payment by the licensee of any financial obligation  or  compensation  that  may  be  determined  by  SKIF Enterprises Pvt. Ltd.  Such notices will be issued electronically on the email address (s) of the licensee.<br>
+        Equipment will remain the property of SKIF unless otherwise agreed upon in writing. SKIF will only consider the connection terminated when the devices are handed over in working condition. Till that time, billing will not cease.
+      </p>
+      <h5>Disclaimer</h5>
+      <p style="margin-left:20px;text-align: justify;text-justify: inter-word;">SKIF Enterprises Pvt. Ltd does not guarantee any specific response time for any method of access to the SKIF Enterprises Pvt. Ltd Internet facilities.
+        SKIF Enterprises Pvt. Ltd disclaims  all  liability  whatsoever,  for  any  loss  of  data  however  caused  including  without  limitation,  non- delivery, missed-delivery or misuse for any interruption, suspension or termination of internet services, or for the contents, accuracy or quality of information or resources made available or received or transmitted through internet services.
+      </p>
+      <h5>Charges and billing</h5>
+      <p style="margin-left:20px;text-align: justify;text-justify: inter-word;">The charges for internet services shall be based on the tariff / rates set by SKIF Enterprises Pvt. Ltd and any amendment thereto may be introduced by SKIF Enterprises Pvt. Ltd.<br>
+        The  registration  charges,  usage  charges,  installation  charges,  configuration  charges,  and  leased  line  charges  etc. whichever applicable, shall be deposited in advance and the internet services to the Licensee shall be terminated as and when the advance usage charges are exhausted.<br>  </p>
+        <table style="border:none;">
+          <td style="vertical-align:center;"><p style="text-align: justify;text-justify: inter-word;margin-left:60px;border:none;">All equipment provided to client for subscribed services shall remain the property of SKIF Enterprises Pvt. Ltd.<br>
+          Upon termination of services, all said equipment must be returned to SKIF Enterprises in their original state and in working condition. If any equipment is received in damaged and or faulty condition, the subscriber will be liable to pay the cost of new equipment before the connection can be terminated.<br>
+          In case the customer refuses to return the equipment, SKIF Enterprises Pvt. Ltd. reserves the right to initiate legal proceedings for recovery of all sums of money associated with the customer's account.<br>
+          Account will not be terminated until legal proceeding have finished and the recurring MRC will be charged as whole inclusive of the time taken to reach a settlement (whether in court or otherwise).</td></p>
+          <td><img src="D:\python\isp\ispinvoice\static\img\Picture1.png" height="250px"></td>
+        </table>
+
+
+      <h5>Description of Services and Customer's Rights</h5>
+      <p style="margin-left:20px;text-align: justify;text-justify: inter-word;">SKIF Enterprises Pvt. Ltd will provide the customer internet connectivity via media and speed as per package selected. SKIF Enterprises Pvt. Ltd will provide 24 hours help-desk facility on phone through its Customer Support Center.<br>
+        The services will be provided to the customers on first come first served basis, provided the customer has necessary facility and configured equipment at his premises.<br>
+        In case the customer desires to terminate their connection with SKIF Enterprises Pvt. Ltd., the advance usage deposit will be refunded to the customer after subtracting any outstanding amounts on part of the customer.
+      </p>
+      <h5>Amendments</h5>
+      <p style="margin-left:20px;text-align: justify;text-justify: inter-word;">The terms and conditions may be amended by SKIF Enterprises Pvt. Ltd. at any time without any prior notice</p>
+      <h5>By signing this document, the recipient agrees to be bound by the aforementioned terms and conditions.</h5>
+      <table style=" width: 100%;">
+        <tr>
+          <td class="middlerow3">Name of Customer: </td>
+          <td class="middlerow">{{applicationform.customer.customer_name}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow3">Date: </td>
+          <td class="middlerow"></td>
+        </tr>
+        <tr>
+          <td style="height:80px;vertical-align:top;" class="middlerow3">Signature: </td>
+          <td style="height:80px;vertical-align:top;" class="middlerow"> </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

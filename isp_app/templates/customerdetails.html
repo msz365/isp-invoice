@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% load humanize %}
+{% block title %}Customer Details{% endblock title %}
+{% block content%}
+<div class="container">
+  <h1>Customer Details</h1>
+  <nav class="navbar navbar-light bg-light justify-content-between">
+    <ul class="nav navbar-nav navbar-left">
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'isp_app:customerupdate' customer.id%}">Update Customer</a></li>
+        <li><a href="{% url 'isp_app:customerdelete' customer.id%}">Delete Customer</a></li>
+
+        {% if customer.get_company %}
+          <li><a href="{% url 'isp_app:applicationform' applicationform.id%}">View Application Form</a></li>
+          <li><a href="{% url 'isp_app:applicationformdownload' applicationform.id%}">Download Application Form</a></li>
+        {% else %}
+        <li><a href="{% url 'isp_app:applicationformra' applicationform.id%}">View Application Form</a></li>
+        <li><a href="{% url 'isp_app:applicationformdownloadra' applicationform.id%}">Download Application Form</a></li>
+        {% endif %}
+        <li><a href="{% url 'isp_app:customerotc' invoice.id%}">View OTC Invoice</a></li>
+        <li><a href="{% url 'isp_app:customerotcdownload' invoice.id%}">Download OTC Invoice</a></li>
+      {% if customer.get_company %}
+        <li><a href="{% url 'isp_app:firstinvoice' firstinvoice.id%}">View First Invoice</a></li>
+        <li><a href="{% url 'isp_app:firstinvoicedownload' firstinvoice.id%}">Download First Invoice</a></li>
+      {% else %}
+      <li><a href="{% url 'isp_app:firstinvoicera' firstinvoice.id%}">View First Invoice</a></li>
+      <li><a href="{% url 'isp_app:firstinvoicedownloadra' firstinvoice.id%}">Download First Invoice</a></li>
+      {% endif %}
+      {% else %}
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+
+<div class="container">
+  <div class="content">
+    <table class="table">
+      <tr>
+        <th>Name</th>
+        <td>{{customer.customer_name}}</td>
+      </tr>
+      <tr>
+        <th>Customer ID</th>
+        <td>{{customer.customer_id}}</td>
+      </tr>
+      <tr>
+        <th>Contact Number</th>
+        <td>{{customer.contact_number}}</td>
+      </tr>
+      <tr>
+        <th>Address</th>
+          <td>{{customer.address}}</td>
+      </tr>
+      <tr>
+        <th>City</th>
+        <td>{{customer.city}}</td>
+      </tr>
+      <tr>
+        <th>Billing Company</th>
+        <td>{{customer.billing_company}}</td>
+      </tr>
+      <tr>
+        <th>E-mail</th>
+        <td>{{customer.email}}</td>
+      </tr>
+      <tr>
+        <th>Contact Number</th>
+        <td>{{customer.contact_number}}</td>
+      </tr>
+      <tr>
+        <th>Co Location</th>
+        <td>{{customer.colocation}}</td>
+      </tr>
+      <tr>
+        <th>Form ID</th>
+        <td>{{customer.form_id}}</td>
+      </tr>
+      <tr>
+        <th>NTN / CNIC</th>
+        <td>{{customer.ntn_cnic}}</td>
+      </tr>
+      <tr>
+        <th>Tax Payer Status</th>
+        <td>{{customer.taxpayer_status}}</td>
+      </tr>
+      <tr>
+        <th>Tax Payer Name</th>
+        <td>{{customer.taxpayer_name}}</td>
+      </tr>
+      <tr>
+        <th>Connection Date</th>
+        <td>{{customer.connection_date}}</td>
+      </tr>
+      <tr>
+        <th>Services Subscribed</th>
+        <td>{% for service in customer.service_subscribed.all %}
+          {{service.service_name}}
+        {%endfor%}</td>
+      </tr>
+      <tr>
+        <th>Total Billing Rs.</th>
+        <td>{{customer.total_billing|intcomma}}</td>
+      </tr>
+      <!-- <tr>
+        <th>CNIC of Authorized Person</th>
+        <td><img src="{{customer.cnic_pic.url}}" alt="" width="300" height="200"></td>
+      </tr> -->
+      <tr>
+        <th>OTC Rs.</th>
+        <td>{{customer.otc|intcomma}}</td>
+      </tr>
+      <tr>
+        <th>Status</th>
+        <td>{{customer.status}}</td>
+      </tr>
+      <tr>
+        <th>CNIC Picture</th>
+        <td><img src="{{customer.cnic_pic.url}}" height="200px" alt=""></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

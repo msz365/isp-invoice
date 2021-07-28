@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load humanize %}
+{% block title %}Service Details{% endblock title %}
+{% block content%}
+<div class="container">
+  <h1>Service Details</h1>
+  <nav class="navbar navbar-light bg-light justify-content-between">
+    <ul class="nav navbar-nav navbar-left">
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'isp_app:serviceupdate' service.id%}">Update Service</a></li>
+        <li><a href="{% url 'isp_app:servicedelete' service.id%}">Delete Service</a></li>
+      {% else %}
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+
+<div class="container">
+  <div class="content">
+    <table class="table">
+      <tr>
+        <th>Name</th>
+        <td>{{service.service_name}}</td>
+      </tr>
+      <tr>
+        <th>Service Type</th>
+        <td>{{service.service_type}}</td>
+      </tr>
+      <tr>
+        <th>Service Quatity</th>
+        <td>{{service.service_qunatity|intcomma}}</td>
+      </tr>
+      <tr>
+        <th>Service Unit Price Rs.</th>
+          <td>{{service.service_unit_price|intcomma}}</td>
+      </tr>
+      <tr>
+        <th>Service Total Rs.</th>
+        <td>{{service.total_service_cost|intcomma}}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

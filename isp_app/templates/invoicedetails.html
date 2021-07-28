@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% load humanize %}
+{% load static%}
+{% block title %}Invoice Details{% endblock title %}
+{% block content%}
+<div class="container">
+  <h1>Invoice Details</h1>
+  <nav class="navbar navbar-light bg-light justify-content-between">
+    <ul class="nav navbar-nav navbar-left">
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'isp_app:invoiceupdate' invoice.id%}">Update Invoice</a></li>
+        <li><a href="{% url 'isp_app:invoicedelete' invoice.id%}">Delete Invoice</a></li>
+        {%if invoice.get_company%}
+          <li><a href="{% url 'isp_app:invoiceshow' invoice.id%}" target="_blank">Show Invoice</a></li>
+        {%else%}
+          <li><a href="{% url 'isp_app:invoiceshowra' invoice.id%}" target="_blank">Show Invoice</a></li>
+        {%endif%}
+        {%if invoice.get_company%}
+          <li><a href="{% url 'isp_app:invoicepdf' invoice.id%}" target="_blank">View PDF</a></li>
+        {%else%}
+          <li><a href="{% url 'isp_app:invoicepdfra' invoice.id%}" target="_blank">View PDF</a></li>
+        {%endif%}
+        {%if invoice.get_company%}
+          <li><a href="{% url 'isp_app:invoicepdfdownload' invoice.id%}" target="_blank">Download PDF</a></li>
+        {%else%}
+          <li><a href="{% url 'isp_app:invoicepdfdownloadra' invoice.id%}" target="_blank">Download PDF</a></li>
+        {%endif%}
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+<div class="container">
+  <div class="content">
+    <table class="table">
+      <form class="" action="{% url 'isp_app:invoiceshow' invoice.id%}" method="post" target="_blank">
+      </form>
+      <tr>
+        <th>Name</th>
+        <td>{{invoice.customer.customer_name}}</td>
+      </tr>
+      <tr>
+        <th>Customer ID</th>
+        <td>{{invoice.customer.customer_id}}</td>
+      </tr>
+      <tr>
+        <th>Contact Number</th>
+        <td>{{invoice.customer.contact_number}}</td>
+      </tr>
+      <tr>
+        <th>Address</th>
+        <td>{{invoice.customer.address}}</td>
+      </tr>
+      <tr>
+        <th>City</th>
+        <td>{{invoice.customer.city}}</td>
+      </tr>
+      <tr>
+        <th>Billing Company</th>
+        <td>{{invoice.customer.billing_company}}</td>
+      </tr>
+      <tr>
+        <th>E-mail</th>
+        <td>{{invoice.customer.email}}</td>
+      </tr>
+      <tr>
+        <th>Contact Number</th>
+        <td>{{invoice.customer.contact_number}}</td>
+      </tr>
+      <tr>
+        <th>Co Location</th>
+        <td>{{invoice.customer.colocation}}</td>
+      </tr>
+      <tr>
+        <th>NTN / CNIC</th>
+        <td>{{invoice.customer.ntn_cnic}}</td>
+      </tr>
+      <tr>
+      <tr>
+        <th>Services Subscribed</th>
+        <td>{% for service in invoice.customer.service_subscribed.all %}
+          {{service.service_name}}
+        {%endfor%}</td>
+      </tr>
+      <tr>
+        <th>Total Billing Rs.</th>
+        <td>{{invoice.customer.total_billing|intcomma}}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

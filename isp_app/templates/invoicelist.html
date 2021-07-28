@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{%load static%}
+{% block title %}Invoice List{% endblock title %}
+{% block content%}
+<div class="container">
+  <h1>Invoices</h1>
+  <nav class="navbar navbar-light bg-light justify-content-between">
+    <ul class="nav navbar-nav navbar-left">
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'isp_app:newinvoice'%}">Add New Invoice</a></li>
+      {% else %}
+      {% endif %}
+    </ul>
+    <form class="form-inline navbar-right">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </nav>
+</div>
+<div class="container">
+  <div class="content">
+    <table class="table table-sortable">
+      <thead>
+        <tr>
+          <th>Invoice Number</th>
+          <th>Customer Name</th>
+          <th>Billing Company</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if qs %}
+          {% for invoice in qs %}
+            <tr>
+              <td><a href="{{invoice.id}}">{{invoice.invoice_number}}</a></td>
+              <td>{{invoice.customer.customer_name}}</td>
+              <td>{{invoice.customer.billing_company}}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          {%for invoice in object_list%}
+            <tr>
+              <td><a href="{{invoice.id}}">{{invoice.invoice_number}}</a></td>
+              <td>{{invoice.customer.customer_name}}</td>
+              <td>{{invoice.customer.billing_company}}</td>
+            </tr>
+          {%endfor%}
+        {% endif %}
+      </tbody>
+    </table>
+    {% include 'pagination.html' with page=page_obj %}
+  </div>
+</div>
+<script type="text/javascript">
+  /**
+ * Sorts a HTML table.
+ *
+ * @param {HTMLTableElement} table The table to sort
+ * @param {number} column The index of the column to sort
+ * @param {boolean} asc Determines if the sorting will be in ascending
+ */
+function sortTableByColumn(table, column, asc = true) {
+    const dirModifier = asc ? 1 : -1;
+    const tBody = table.tBodies[0];
+    const rows = Array.from(tBody.querySelectorAll("tr"));
+
+    // Sort each row
+    const sortedRows = rows.sort((a, b) => {
+        const aColText = a.querySelector(`td:nth-child(${ column + 1 })`).textContent.trim();
+        const bColText = b.querySelector(`td:nth-child(${ column + 1 })`).textContent.trim();
+
+        return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
+    });
+
+    // Remove all existing TRs from the table
+    while (tBody.firstChild) {
+        tBody.removeChild(tBody.firstChild);
+    }
+
+    // Re-add the newly sorted rows
+    tBody.append(...sortedRows);
+
+    // Remember how the column is currently sorted
+    table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
+    table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-asc", asc);
+    table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-desc", !asc);
+}
+
+document.querySelectorAll(".table-sortable th").forEach(headerCell => {
+    headerCell.addEventListener("click", () => {
+        const tableElement = headerCell.parentElement.parentElement.parentElement;
+        const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
+        const currentIsAscending = headerCell.classList.contains("th-sort-asc");
+
+        sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
+    });
+});
+</script>
+{% endblock %}

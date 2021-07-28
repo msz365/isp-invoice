@@ -1,0 +1,987 @@
+{% extends "base.html" %}
+{% load humanize %}
+{%block title%}
+  Dashboard
+{%endblock title%}
+{%block scripts%}
+<style>
+  .card{
+    border-radius: 20px 20px 20px 20px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #30c6f0;
+    box-shadow: 2px 2px 10px 2px #888888;
+    padding:5px;
+    margin:0px 20px 20px 5px ;
+  }
+  .abc{
+    height:26vh;
+    padding:20px;
+
+  }
+  .containerdiv{
+    height:18vh;
+  }
+
+  .sidenav {
+  height: 100%;
+  width: 160px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #115379;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #fff;
+  display: block;
+}
+.sidenav h5 {
+  padding: 6px 8px 6px 8px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #fff;
+  display: block;
+}
+
+.sidenav a:hover {
+  color:  #115379;
+  background-color:#fff;
+}
+
+.main {
+  margin-left: 160px; /* Same as the width of the sidenav */
+  font-size: 15px; /* Increased text to enable scrolling */
+  padding: 0px 10px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+</style>
+  <script>
+    $(document).ready(function(){
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: ['SKIF', 'RA'],
+              datasets: [{
+                  label: 'Number of Client',
+                  data: [{%for item in qs%}{% if forloop.first %}'{{item.get_companywise_count}}','{{item.get_companywise_countra}}',{%endif%}{%endfor%}],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+            responsive:true,
+            maintainAspectRatio:false,
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              },
+              animation:{
+                duration:2000,
+                ease: 'easeInQuint'
+              },
+
+          }
+      });
+
+      var ctx = document.getElementById('myChart2').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+              labels: ['SKIF','RA'],
+              datasets: [{
+                  label: 'Total Revenue (Without Taxes)',
+                  data: [{%for item in qs%} {% if forloop.first %}'{{item.get_skif_revenue}}','{{item.get_ra_revenue}}',{%endif%}{%endfor%}],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+            responsive:true,
+            maintainAspectRatio:false,
+
+          }
+      });
+
+      var ctx = document.getElementById('myChart3').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: {{cities|safe}},
+              datasets: [{
+                  label: 'SKIF',
+                  data: {{data_skif|safe}},
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+
+
+                  ],
+                  borderColor: [
+
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'RA',
+                  data: {{data_ra|safe}},
+                  backgroundColor: [
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+
+
+                  ],
+                  borderColor: [
+
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                      'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                  ],
+                  borderWidth: 1
+              }
+              ]
+          },
+          options: {
+            responsive:true,
+            maintainAspectRatio:false,
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }],
+                  xAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+      });
+
+
+
+      var ctx = document.getElementById('myChart5').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: {{cities|safe}},
+              datasets: [{
+                  label: 'SKIF',
+                  data: {{skif_revenue_per_city|safe}},
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+
+
+                  ],
+                  borderColor: [
+
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'RA',
+                  data: {{ra_revenue_per_city|safe}},
+                  backgroundColor: [
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+
+
+                  ],
+                  borderColor: [
+
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                      'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                  ],
+                  borderWidth: 1
+              }
+              ]
+          },
+          options: {
+              responsive:true,
+              maintainAspectRatio:false,
+
+          }
+      });
+
+
+
+
+
+      var ctx = document.getElementById('myChart7').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: {{services|safe}},
+              datasets: [{
+                  label: 'SKIF',
+                  data: {{service_count_skif|safe}},
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 99, 132, 0.2)',
+
+
+                  ],
+                  borderColor: [
+
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(255, 99, 132, 1)',
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'RA',
+                  data: {{service_count_ra|safe}},
+                  backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+
+                  ],
+                  borderColor: [
+
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(54, 162, 235, 1)',
+
+                  ],
+                  borderWidth: 1
+              }
+              ]
+          },
+          options: {
+            responsive:true,
+            maintainAspectRatio:false,
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }],
+                  xAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+      });
+
+      var ctx = document.getElementById('myChart9').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: {{cities|safe}},
+              datasets: [{
+                  label: 'CIR',
+                  data: {{cir_skif|safe}},
+                  backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'Live IPs',
+                  data: {{ip_skif|safe}},
+                  backgroundColor: [
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+              ],
+              borderColor: [
+
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(54, 162, 235, 1)',
+
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'Shared',
+                  data: {{shared_skif|safe}},
+                  backgroundColor: [
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+              ],
+              borderColor: [
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(255, 206, 86, 1)',
+
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'Business Plus',
+                  data: {{bp_skif|safe}},
+                  backgroundColor: [
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+              ],
+              borderColor: [
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(75, 192, 192, 1)',
+
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'L2 Data',
+                  data: {{l2_skif|safe}},
+                  backgroundColor: [
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+              ],
+              borderColor: [
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(153, 102, 255, 1)',
+
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'VPS',
+                  data: {{vps_skif|safe}},
+                  backgroundColor: [
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 159, 64, 1)',
+                  'rgba(255, 159, 64, 1)',
+                  'rgba(255, 159, 64, 1)',
+                  'rgba(255, 159, 64, 1)',
+                  'rgba(255, 159, 64, 1)',
+                  'rgba(255, 159, 64, 1)'
+
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'Hosted Server',
+                  data: {{hosted_skif|safe}},
+                  backgroundColor: [
+                  'rgba(201, 203, 207,0.2)',
+                  'rgba(201, 203, 207,0.2)',
+                  'rgba(201, 203, 207,0.2)',
+                  'rgba(201, 203, 207,0.2)',
+                  'rgba(201, 203, 207,0.2)',
+                  'rgba(201, 203, 207,0.2)',
+              ],
+              borderColor: [
+                  'rgba(201, 203, 207,1)',
+                  'rgba(201, 203, 207,1)',
+                  'rgba(201, 203, 207,1)',
+                  'rgba(201, 203, 207,1)',
+                  'rgba(201, 203, 207,1)',
+                  'rgba(201, 203, 207,1)',
+
+                  ],
+                  borderWidth: 1
+              }
+              ]
+          },
+          options: {
+            responsive:true,
+            maintainAspectRatio:false,
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }],
+                  xAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+      });
+
+      var ctx = document.getElementById('myChart10').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: {{cities|safe}},
+              datasets: [{
+                  label: 'CIR',
+                  data: {{cir_ra|safe}},
+                  backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'Live IPs',
+                  data: {{ip_ra|safe}},
+                  backgroundColor: [
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+              ],
+              borderColor: [
+
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(54, 162, 235, 1)',
+
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'Shared',
+                  data: {{shared_ra|safe}},
+                  backgroundColor: [
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+              ],
+              borderColor: [
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(255, 206, 86, 1)',
+
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'Business Plus',
+                  data: {{bp_ra|safe}},
+                  backgroundColor: [
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+              ],
+              borderColor: [
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(75, 192, 192, 1)',
+
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'L2 Data',
+                  data: {{l2_ra|safe}},
+                  backgroundColor: [
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+              ],
+              borderColor: [
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(153, 102, 255, 1)',
+
+
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'VPS',
+                  data: {{vps_ra|safe}},
+                  backgroundColor: [
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 159, 64, 1)',
+                  'rgba(255, 159, 64, 1)',
+                  'rgba(255, 159, 64, 1)',
+                  'rgba(255, 159, 64, 1)',
+                  'rgba(255, 159, 64, 1)',
+                  'rgba(255, 159, 64, 1)'
+
+                  ],
+                  borderWidth: 1
+              },
+              {
+                  label: 'Hosted Server',
+                  data: {{hosted_ra|safe}},
+                  backgroundColor: [
+                  'rgba(201, 203, 207,0.2)',
+                  'rgba(201, 203, 207,0.2)',
+                  'rgba(201, 203, 207,0.2)',
+                  'rgba(201, 203, 207,0.2)',
+                  'rgba(201, 203, 207,0.2)',
+                  'rgba(201, 203, 207,0.2)',
+              ],
+              borderColor: [
+                  'rgba(201, 203, 207,1)',
+                  'rgba(201, 203, 207,1)',
+                  'rgba(201, 203, 207,1)',
+                  'rgba(201, 203, 207,1)',
+                  'rgba(201, 203, 207,1)',
+                  'rgba(201, 203, 207,1)',
+                  ],
+                  borderWidth: 1
+              }
+              ]
+          },
+          options: {
+            responsive:true,
+            maintainAspectRatio:false,
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }],
+                  xAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+      });
+
+
+      var ctx = document.getElementById('myChart11').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+              labels: {{total_cities|safe}},
+              datasets: [{
+                  label: 'Total Revenue (Without Taxes)',
+                  data: {{total_revenue_city|safe}},
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }
+              ]
+          },
+
+      });
+
+      // var ctx = document.getElementById('myChart12').getContext('2d');
+      // var myChart = new Chart(ctx, {
+      //     type: 'bar',
+      //     data: {
+      //         labels: {{services|safe}},
+      //         datasets: [{
+      //             label: 'SKIF',
+      //             data: {{skif_service_revenue|safe}},
+      //             backgroundColor: [
+      //                 'rgba(255, 99, 132, 0.2)',
+      //                 'rgba(255, 99, 132, 0.2)',
+      //                 'rgba(255, 99, 132, 0.2)',
+      //                 'rgba(255, 99, 132, 0.2)',
+      //                 'rgba(255, 99, 132, 0.2)',
+      //                 'rgba(255, 99, 132, 0.2)',
+      //
+      //
+      //             ],
+      //             borderColor: [
+      //
+      //                 'rgba(255, 99, 132, 1)',
+      //                 'rgba(255, 99, 132, 1)',
+      //                 'rgba(255, 99, 132, 1)',
+      //                 'rgba(255, 99, 132, 1)',
+      //                 'rgba(255, 99, 132, 1)',
+      //                 'rgba(255, 99, 132, 1)',
+      //                 'rgba(255, 99, 132, 1)',
+      //             ],
+      //             borderWidth: 1
+      //         },
+      //         {
+      //             label: 'RA',
+      //             data: {{ra_service_revenue|safe}},
+      //             backgroundColor: [
+      //               'rgba(54, 162, 235, 0.2)',
+      //               'rgba(54, 162, 235, 0.2)',
+      //               'rgba(54, 162, 235, 0.2)',
+      //               'rgba(54, 162, 235, 0.2)',
+      //               'rgba(54, 162, 235, 0.2)',
+      //               'rgba(54, 162, 235, 0.2)',
+      //               'rgba(54, 162, 235, 0.2)',
+      //
+      //             ],
+      //             borderColor: [
+      //
+      //                 'rgba(54, 162, 235, 1)',
+      //                 'rgba(54, 162, 235, 1)',
+      //                 'rgba(54, 162, 235, 1)',
+      //                 'rgba(54, 162, 235, 1)',
+      //                 'rgba(54, 162, 235, 1)',
+      //                 'rgba(54, 162, 235, 1)',
+      //                 'rgba(54, 162, 235, 1)',
+      //                 'rgba(54, 162, 235, 1)',
+      //
+      //             ],
+      //             borderWidth: 1
+      //         }
+      //         ]
+      //     },
+      //     options: {
+      //       responsive:true,
+      //       maintainAspectRatio:false,
+      //         scales: {
+      //             yAxes: [{
+      //                 ticks: {
+      //                     beginAtZero: true
+      //                 }
+      //             }],
+      //             xAxes: [{
+      //                 ticks: {
+      //                     beginAtZero: true
+      //                 }
+      //             }]
+      //         }
+      //     }
+      // });
+
+
+    });
+  </script>
+{%endblock scripts%}
+
+
+{% block content %}
+<div class="sidenav">
+  <div class="">
+    <div class="card" style="height:11vh;">
+      <div class="card-body">
+        <p class="text-center" style="color:#fff;"><b>Active Clients</b></p>
+      </div>
+      <div class="card-body">
+        <h1 style="text-align:center;color:#fff;">{{customer_count}}</h1>
+      </div>
+    </div>
+  </div>
+  <div class="" style="">
+    <div class="card" style="height:11vh;">
+      <div class="card-body">
+        <p class="text-center" style="color:#fff;"><b>Total Revenue</b></p>
+      </div>
+      <div class="card-body">
+        <h1 style="text-align:center;font-size:20px;color:#fff;"><strong>Rs. {{total_grand|intcomma}}</strong></h1>
+      </div>
+    </div>
+  </div>
+  <div class="">
+    <div class="card" style="height:11vh;">
+      <div class="card-body">
+        <p class="text-center" style="color:#fff;"><b>Total Bandwidth Sold</b></p>
+      </div>
+      <div class="card-body">
+        <h1 style="text-align:center;font-size:20px;color:#fff;"><strong>{{total_mbs|intcomma}} Mbps</strong></h1>
+      </div>
+    </div>
+  </div>
+  <h5>Reports</h5>
+  <a href="#">Month Wise</a>
+  <a href="#">Service Wise</a>
+  <a href="#">Client Wise</a>
+  <a href="#">Company Wise</a>
+</div>
+
+<div class="main">
+<div class="">
+  <div class="col-md-3 offset-md-2">
+    <div class="card abc">
+      <div class="card-body ">
+        <p class="text-center"><b>Number of Clinets City Wise</b></p>
+      </div>
+      <div class="card-body containerdiv">
+        <canvas id="myChart3"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 offset-md-3">
+    <div class="card abc" style="">
+      <div class="card-body ">
+        <p class="text-center"><b>Service Distribution per City (SKIF)</b></p>
+      </div>
+      <div class="card-body  containerdiv">
+        <canvas id="myChart9" style="" ></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 offset-md-2">
+    <div class="card abc">
+      <div class="card-body">
+        <p class="text-center"><b>Revenue</b></p>
+      </div>
+      <div class="card-body containerdiv">
+        <canvas id="myChart2"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="">
+  <div class="col-md-6 offset-md-3">
+    <div class="card abc">
+      <div class="card-body ">
+        <p class="text-center"><b>Service Distribution per City (RA)</b></p>
+      </div>
+      <div class="card-body containerdiv">
+        <canvas id="myChart10"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 offset-md-2">
+    <div class="card abc" >
+      <div class="card-body ">
+        <p class="text-center"><b>City Wise Revenue</b></p>
+      </div>
+      <div class="card-body containerdiv">
+        <canvas id="myChart11"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 offset-md-2">
+    <div class="card abc">
+      <div class="card-body">
+        <p class="text-center"><b>Client Distribution</b></p>
+      </div>
+      <div class="card-body containerdiv">
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="">
+  <div class="col-md-6 offset-md-2">
+    <div class="card abc">
+      <div class="card-body ">
+        <p class="text-center"><b>City Wise Revenue</b></p>
+      </div>
+      <div class="card-body containerdiv">
+        <canvas id="myChart5"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 offset-md-2" >
+    <div class="card abc">
+      <div class="card-body ">
+        <p class="text-center"><b>Service Wise Customer Count</b></p>
+      </div>
+      <div class="card-body containerdiv">
+        <canvas id="myChart7"></canvas>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="col-md-12 offset-md-2" >
+    <div class="card abc">
+      <div class="card-body ">
+        <p class="text-center"><b>Service Wise Revenue</b></p>
+      </div>
+      <div class="card-body containerdiv">
+        <canvas id="myChart12"></canvas>
+      </div>
+    </div>
+  </div> -->
+</div>
+</div>
+
+
+
+
+{% endblock %}

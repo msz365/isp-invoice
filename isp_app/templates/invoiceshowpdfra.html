@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+{% load bootstrap3 %}
+{% load humanize %}
+{% load static%}
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Invoice {{invoice.invoice_number}}</title>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+    <style type="text/css">
+
+      .middlerow{
+        width:400px;
+      }
+      .cdetl{
+        background-color:#f32c9d;
+      }
+      .middlerow2{
+        width:100px;
+      }
+      .sno{
+        width:50px;
+      }
+      .invdetl{
+        text-align: center;
+      }
+      .mytitle{
+        text-align:center;
+      }
+      .center{
+        text-align: center;
+      }
+      .myright{
+        text-align:right;
+      }
+      .myheading2{
+        background-color:#f32c9d;
+        text-align:center;
+
+      }
+      .abc{
+        height:300px;
+      }
+      .right{
+        text-align: right;
+      }
+      th, td {
+        padding: 3px;
+        border: 0.15px solid grey;
+        vertical-align: bottom;
+
+      }
+      table{
+        padding-top: 3px;
+
+      }
+      h1{
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" padding-top="20px">
+      <div class="logo">
+        <img src="D:\python\isp\ispinvoice\static\img\ra.png" width="250px" height="125px">
+      </div>
+        <div class="col-md-12 mytitle" ><h1>Quotation</h1></div>
+      <table>
+        <tr class="cdetl">
+          <th colspan="4">Customer Details</th>
+        </tr>
+      </table>
+      <br>
+      <table>
+        <tr>
+          <td class="middlerow2">Customer Name: </td>
+          <td>{{invoice.customer.customer_name}}</td>
+          <td class="right middlerow2">Quotation Number: </td>
+          <td class="invdetl">{{invoice.invoice_number}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Company Name: </td>
+          <td>{{invoice.customer.taxpayer_name}}</td>
+          <td class="right middlerow2">Quotation Date: </td>
+          <td class="invdetl">{{invoice.invoice_date|date}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Contact Number: </td>
+          <td>{{invoice.customer.contact_number}}</td>
+          <td class="right middlerow2">Quotation Month: </td>
+          <td class="invdetl">{{invoice.get_month}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Customer ID: </td>
+          <td>{{invoice.customer.customer_id}}</td>
+          <th class="right middlerow2">Due Date: </th>
+          <th class="invdetl">{{invoice.get_duedate|date}}</th>
+        </tr>
+        <tr>
+          <td class="middlerow2">Address: </td>
+          <td class="middlerow">{{invoice.customer.address}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">City: </td>
+          <td>{{invoice.customer.city}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">E-Mail Address: </td>
+          <td>{{invoice.customer.email}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">Entity Type: </td>
+          <td>{{invoice.customer.taxpayer_status}}</td>
+        </tr>
+        <tr>
+          <td class="middlerow2">NTN/CNIC: </td>
+          <td>{{invoice.customer.ntn_cnic}}</td>
+        </tr>
+      </table>
+      <br>
+      <br>
+      <table>
+        <tr class="myheading2">
+          <th class="sno">SNo.</th>
+          <th >Service</th>
+          <th>Qty/Mbps</th>
+          <th>Taxes Applied</th>
+          <th>Amount</th>
+        </tr>
+
+          {% for service in invoice.customer.service_subscribed.all %}
+            <tr>
+            <td class="center">{{forloop.counter}}</td>
+            <td class="center">{{service.service_name}}</td>
+            <td class="center">{{service.service_qunatity}}</td>
+            <td class="center">0</td>
+            <td class="center">{{service.cost_pretax|intcomma}}</td>
+            </tr>
+          {%endfor%}
+      </table>
+    </div>
+    <div class="abc">
+
+    </div>
+    <br>
+    <br>
+    <table>
+      <tr>
+        <td colspan="3"></td>
+        <th class="myheading2">Summary</th>
+        <th class="myheading2">Amount</th>
+      </tr>
+      <tr>
+        <td colspan="3"></td>
+        <th class="center">Amount Within Due Date</th>
+        <th class="center">{{invoice.customer.total_service_cost_ra|intcomma}}</th>
+      </tr>
+      <tr>
+        <th colspan="3"></th>
+        <th class="center">Amount After Due Date</th>
+        <th class="center">{{invoice.customer.amount_after_due_date_ra|intcomma}}</th>
+      </tr>
+    </table>
+      <div class="row justify-content-center bg-success">
+        <div class="col-md-12"><h5>Amount in words: {{invoice.customer.get_words}}</h5></div>
+      </div>
+      <p>1. Kindly ensure payment within due date to avoid automatic disconnection
+      <br>2.. This is a computer generated Invoice and does not require any signature.
+      <br>
+     </p>
+      <div class="row justify-content-center">
+        <div class="col-md-12 right"><h6>Invoice Prepared by {{invoice.invoice_created_by}}</h6></div>
+      </div>
+    </div>
+
+  </body>
+</html>
