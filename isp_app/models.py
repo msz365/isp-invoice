@@ -11,6 +11,7 @@ from django.contrib import auth
 from accounts.models import User
 from django.conf import settings
 from django.db.models.signals import pre_save, post_save
+from decimal import *
 
 
 
@@ -180,10 +181,11 @@ class Customer(models.Model):
             temp_total_tax=0
             if service.service_tax.all().exists():
                 for tax in service.service_tax.all().filter(tax_type__contains='Simple'):
-                    temp_total_tax=temp_total*tax.tax_percentage
+                    temp_total_tax=Decimal(temp_total)*tax.tax_percentage
                     total_gst+=temp_total_tax
             else:
                 total_gst=0
+        
         return int(total_gst)
 
     def get_wht(self):
@@ -194,8 +196,8 @@ class Customer(models.Model):
             temp_total_tax=0
             if service.service_tax.all().exists():
                 for tax in service.service_tax.all().filter(tax_type__contains='Simple'):
-                    temp_total_tax=(service.service_qunatity*service.service_unit_price)*tax.tax_percentage
-                    temp_total+=temp_total_tax
+                    temp_total_tax=Decimal(service.service_qunatity*service.service_unit_price)*tax.tax_percentage
+                    temp_total=Decimal(temp_total)+temp_total_tax
                 for tax in service.service_tax.all().filter(tax_type__contains='Compound'):
                     total_wht=total_wht+(temp_total*tax.tax_percentage)
             else:
