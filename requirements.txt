@@ -1,4 +1,4 @@
-asgiref==3.2.3
+asgiref @ file:///tmp/build/80754af9/asgiref_1594338739818/work
 astroid==2.4.2
 beautifulsoup4==4.9.1
 bokeh==2.2.0
@@ -64,7 +64,6 @@ WeasyPrint==51
 webencodings==0.5.1
 whitenoise==5.3.0
 wincertstore==0.2
-wkhtmltopdf==0.2
 wrapt==1.12.1
 xhtml2pdf==0.2.4
 xlrd==1.2.0
